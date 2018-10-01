@@ -1,43 +1,36 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
-public class PasswordPicker {
+public final class PasswordPicker {
 
-    public String pickPassword() {
-        //Loads wordList file, which contains passwords for Hangman
+    public static String pickPassword() {
+        Scanner scannedPasswords = loadPasswords();
+        List<String> passwords = new ArrayList<>();
+
+        if (scannedPasswords != null) {
+            while (scannedPasswords.hasNextLine()) {
+                String line = scannedPasswords.nextLine();
+                passwords.add(line);
+            }
+        }
+        int passwordsCount = passwords.size();
+        int randomPasswordIndex = (int) (Math.random() * passwordsCount);
+
+        return passwords.get(randomPasswordIndex).toLowerCase();
+    }
+
+    private static Scanner loadPasswords(){
         File file = new File("wordList.txt");
         Scanner wordScanner = null;
         try {
             wordScanner = new Scanner(file);
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
-
         }
-
-        //Hangman file can contain up to 100 passwords
-        String[] passwords = new String[100];
-        int i = 0;
-
-        // Converts file into String array of passwords
-        if (wordScanner != null) {
-            while (wordScanner.hasNextLine()) {
-                String line = wordScanner.nextLine();
-                passwords[i] = line;
-                i++;
-            }
-        }
-
-        //pick random password and print it:
-        double rDouble = Math.random() * i;
-        int rInt = (int) rDouble;
-
-
-        //returns one password
-        return passwords[rInt];
-
+        return wordScanner;
     }
-
-
 
 }

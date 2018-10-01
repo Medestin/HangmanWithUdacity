@@ -1,63 +1,46 @@
 public class Hangman {
 
-    private String passwordString;
-    private char[] passwordCharArray;
+    private final String passwordString;
+    private final char[] passwordCharArray;
 
-    Hangman(String inputString, char[] inputCharArray) {
-        passwordString = inputString;
-        passwordCharArray = inputCharArray;
+    Hangman(String passwordString) {
+        this.passwordString = passwordString;
 
+        this.passwordCharArray = new char[passwordString.length()];
+        for (int i = 0; i < passwordString.length(); i++) {
+            passwordCharArray[i] = '_';
+        }
 
         int spaces = passwordString.indexOf(' ');
         while (spaces != -1) {
             passwordCharArray[spaces] = ' ';
             spaces = passwordString.indexOf(' ', spaces + 1);
         }
-
     }
 
     public void printCharArray() {
         System.out.println(passwordCharArray);
-
     }
 
-    public void checkBlanksLeft() {
-        int countLeft = 0;
+    public int blanksLeft() {
+        int blanksLeft = 0;
         for (int i = 0; i < passwordCharArray.length; i++) {
             if (passwordCharArray[i] == '_') {
-                countLeft++;
+                blanksLeft++;
             }
-
         }
-        System.out.println("Blank spaces left: " + countLeft);
+        return blanksLeft;
     }
 
     public boolean hasWon() {
-        boolean hasWon;
-        int countLeft = 0;
-        for (int i = 0; i < passwordCharArray.length; i++) {
-            if (passwordCharArray[i] == '_') {
-                countLeft++;
-            }
-        }
-        if (countLeft == 0) {
-            hasWon = true;
-        } else {
-            hasWon = false;
-        }
-
-        return hasWon;
+        return blanksLeft() == 0;
     }
 
-
-    public void guess(char letter) {
-        int spaces = passwordString.indexOf(letter);
-        while (spaces != -1) {
-            passwordCharArray[spaces] = letter;
-            spaces = passwordString.indexOf(letter, spaces + 1);
+    public void revealLetter(char letter) {
+        int letterIndex = passwordString.indexOf(letter);
+        while (letterIndex != -1) {
+            passwordCharArray[letterIndex] = letter;
+            letterIndex = passwordString.indexOf(letter, letterIndex + 1);
         }
-
     }
-
-
 }
